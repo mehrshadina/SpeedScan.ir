@@ -5,23 +5,29 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>PageSpeed ایران — خانه</title>
 
-<!-- FONT -->
-<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v34.1.0/dist/font-face.css" rel="stylesheet" type="text/css"/>
-
+<!-- LOCAL FONT -->
 <style>
+@font-face {
+  font-family: 'Vazir';
+  src: url('/static/fonts/Vazir.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root{
   --m3-bg:#0b1020;
   --card:#0f1724;
   --muted:#94a3b8;
-  --accent:#6750A4; /* material 3 purple */
+  --accent:#6750A4;
   --accent-2:#7c4dff;
   --glass: rgba(255,255,255,0.03);
   --radius:14px;
   --gap:18px;
   --text:#e6eef8;
-  font-family: "Vazirmatn", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: "Vazir", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
   font-size:14px;
 }
+
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%, #071224 100%);color:var(--text);}
 
@@ -40,6 +46,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
   backdrop-filter:blur(18px);
   animation:fadeIn .8s ease;
 }
+
 @keyframes fadeIn{
   from{opacity:0; transform:translateY(10px)}
   to{opacity:1; transform:translateY(0)}
@@ -67,7 +74,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
   margin-top:35px;
   display:flex;
   gap:12px;
-  direction: ltr;
+  direction:ltr;
 }
 
 .form input{
@@ -97,7 +104,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
   cursor:not-allowed;
 }
 
-/* Loading animation */
+/* LOADER */
 .loader{
   width:32px;
   height:32px;
@@ -139,13 +146,26 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
   font-size:13px;
   color:var(--muted);
 }
+
+/* MOBILE FIX */
+@media (max-width: 600px){
+  .form{
+    flex-direction: column;
+  }
+  .button{
+    width:100%;
+    padding:14px 0;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <div class="app">
   <div class="wrap">
     <div class="title">PageSpeed ایران</div>
+
     <div class="desc">
       سریع‌ترین و پیشرفته‌ترین پنل تحلیل PageSpeed در ایران — با رندر کامل Lighthouse، گزارش‌گیری حرفه‌ای،
       نمودارهای دقیق، و نمایش تمام جزئیات Performance، SEO، Accessibility و Best Practices.
@@ -164,22 +184,22 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
     <div class="features">
       <div class="feat">
         <div class="feat-title">Lighthouse کامل</div>
-        <div class="feat-desc">تحلیل کامل و واقعی JSON با تمام شاخص‌ها</div>
+        <div class="feat-desc">تحلیل کامل JSON با تمام شاخص‌ها</div>
       </div>
 
       <div class="feat">
         <div class="feat-title">Core Web Vitals</div>
-        <div class="feat-desc">نمایش LCP، CLS، FCP و تمام معیارهای سرعت</div>
+        <div class="feat-desc">نمایش LCP، CLS، FCP و تمام معیارها</div>
       </div>
 
       <div class="feat">
         <div class="feat-title">رندر Material 3</div>
-        <div class="feat-desc">داشبورد حرفه‌ای با طراحی مدرن و چشم‌نواز</div>
+        <div class="feat-desc">داشبورد حرفه‌ای و مدرن</div>
       </div>
 
       <div class="feat">
         <div class="feat-title">JSON Viewer</div>
-        <div class="feat-desc">نمایش کامل خروجی Lighthouse با فیلترها</div>
+        <div class="feat-desc">نمایش کامل خروجی Lighthouse</div>
       </div>
     </div>
 
@@ -201,6 +221,14 @@ function startTest(e){
     window.location.href = "/pagespeed-check?url=" + encodeURIComponent(url);
   }, 800);
 }
+
+/* FIX BACK BUTTON CACHE */
+window.addEventListener("pageshow", function(event) {
+  if (event.persisted) {
+    document.getElementById('btnTest').disabled = false;
+    document.getElementById('loader').style.display = "none";
+  }
+});
 </script>
 
 </body>
