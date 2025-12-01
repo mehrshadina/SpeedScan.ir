@@ -22,7 +22,7 @@ def pagespeed_check(request):
     try:
         resp = requests.get(settings.GOOGLE_PAGESPEED_API_URL, params=params, timeout=40)
         resp.raise_for_status()
-        print(resp.json())
+        print(resp.url)
         data = resp.json()
     except Exception as e:
         return render(request, "result.html", {"error": str(e), "url": url})
