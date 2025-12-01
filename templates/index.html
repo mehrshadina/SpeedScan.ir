@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PageSpeed ایران — خانه</title>
+
+<!-- FONT -->
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v34.1.0/dist/font-face.css" rel="stylesheet" type="text/css"/>
+
+<style>
+:root{
+  --m3-bg:#0b1020;
+  --card:#0f1724;
+  --muted:#94a3b8;
+  --accent:#6750A4; /* material 3 purple */
+  --accent-2:#7c4dff;
+  --glass: rgba(255,255,255,0.03);
+  --radius:14px;
+  --gap:18px;
+  --text:#e6eef8;
+  font-family: "Vazirmatn", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size:14px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%, #071224 100%);color:var(--text);}
+
+/* APP LAYOUT */
+.app{display:flex;flex-direction:column;min-height:100vh;align-items:center;justify-content:center;padding:20px}
+
+/* WRAP / INTRO CARD */
+.wrap{
+  width:100%;
+  max-width:850px;
+  background:var(--glass);
+  padding:40px 45px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  backdrop-filter:blur(18px);
+  animation:fadeIn .8s ease;
+}
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+.title{
+  font-size:32px;
+  font-weight:800;
+  text-align:center;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.desc{
+  margin-top:15px;
+  font-size:15px;
+  line-height:2;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* FORM */
+.form{
+  margin-top:35px;
+  display:flex;
+  gap:12px;
+  direction: ltr;
+}
+
+.form input{
+  flex:1;
+  padding:14px 18px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.07);
+  background:var(--card);
+  color:var(--text);
+  font-size:15px;
+}
+
+.button{
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  border:none;
+  padding:0 28px;
+  border-radius:14px;
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+  font-size:15px;
+  box-shadow:0 8px 20px rgba(124,77,255,0.25);
+}
+
+.button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+/* Loading animation */
+.loader{
+  width:32px;
+  height:32px;
+  border:4px solid var(--accent);
+  border-right-color:transparent;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin:auto;
+  display:none;
+  margin-top:25px;
+}
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* FEATURES */
+.features{
+  margin-top:45px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+}
+
+.feat{
+  background:rgba(255,255,255,0.03);
+  padding:18px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.04);
+  text-align:center;
+}
+
+.feat-title{
+  font-weight:700;
+  margin-bottom:6px;
+  font-size:16px;
+}
+
+.feat-desc{
+  font-size:13px;
+  color:var(--muted);
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="wrap">
+    <div class="title">PageSpeed ایران</div>
+    <div class="desc">
+      سریع‌ترین و پیشرفته‌ترین پنل تحلیل PageSpeed در ایران — با رندر کامل Lighthouse، گزارش‌گیری حرفه‌ای،
+      نمودارهای دقیق، و نمایش تمام جزئیات Performance، SEO، Accessibility و Best Practices.
+    </div>
+
+    <!-- FORM -->
+    <form class="form" onsubmit="startTest(event)">
+      <input id="urlInput" placeholder="مثال: https://example.com" required>
+      <button id="btnTest" class="button">شروع تست</button>
+    </form>
+
+    <!-- LOADER -->
+    <div id="loader" class="loader"></div>
+
+    <!-- FEATURES -->
+    <div class="features">
+      <div class="feat">
+        <div class="feat-title">Lighthouse کامل</div>
+        <div class="feat-desc">تحلیل کامل و واقعی JSON با تمام شاخص‌ها</div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-title">Core Web Vitals</div>
+        <div class="feat-desc">نمایش LCP، CLS، FCP و تمام معیارهای سرعت</div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-title">رندر Material 3</div>
+        <div class="feat-desc">داشبورد حرفه‌ای با طراحی مدرن و چشم‌نواز</div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-title">JSON Viewer</div>
+        <div class="feat-desc">نمایش کامل خروجی Lighthouse با فیلترها</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function startTest(e){
+  e.preventDefault();
+
+  const url = document.getElementById('urlInput').value;
+  const btn = document.getElementById('btnTest');
+  const loader = document.getElementById('loader');
+
+  btn.disabled = true;
+  loader.style.display = "block";
+
+  setTimeout(()=>{
+    window.location.href = "/pagespeed-check?url=" + encodeURIComponent(url);
+  }, 800);
+}
+</script>
+
+</body>
+</html>

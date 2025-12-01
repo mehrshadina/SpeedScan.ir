@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PageSpeed ایران — Material 3 Dashboard</title>
+
+<!-- ====== Material-ish variables (改) ====== -->
+<style>
+:root{
+  --m3-bg:#0b1020;
+  --card:#0f1724;
+  --muted:#94a3b8;
+  --accent:#6750A4; /* material 3 purple */
+  --accent-2:#7c4dff;
+  --success:#1eb980;
+  --danger:#ff6b6b;
+  --glass: rgba(255,255,255,0.03);
+  --radius:14px;
+  --gap:18px;
+  --text:#e6eef8;
+  font-family: "Vazirmatn", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size:14px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%, #071224 100%);color:var(--text);}
+.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh;gap:0}
+
+/* SIDEBAR */
+.sidebar{
+  padding:28px 18px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-right:1px solid rgba(255,255,255,0.03);
+}
+.brand{font-weight:800;font-size:18px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.brand .dot{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 6px 22px rgba(124,77,255,0.12)}
+.nav{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.nav a{padding:12px;border-radius:12px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:12px}
+.nav a.active, .nav a:hover{background:rgba(255,255,255,0.03);color:var(--text)}
+.small{font-size:12px;color:var(--muted)}
+
+/* HEADER */
+.header{
+  padding:18px 26px;background:transparent;border-bottom:1px solid rgba(255,255,255,0.02);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.controls{display:flex;gap:12px;align-items:center}
+.input, .select {
+  background:var(--card);border:1px solid rgba(255,255,255,0.04);padding:10px 12px;border-radius:10px;color:var(--text);
+}
+.btn{
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 20px rgba(124,77,255,0.14);
+}
+
+/* MAIN */
+.main{padding:22px 28px}
+.grid{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);
+}
+
+/* Cards */
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px;border-radius:var(--radius);box-shadow:0 10px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+.col-4{grid-column: span 4}
+.col-8{grid-column: span 8}
+.col-12{grid-column: span 12}
+.flex{display:flex;gap:12px;align-items:center;}
+
+/* Score rings */
+.score-wrap{display:flex;gap:12px;align-items:center}
+.ring{width:90px;height:90px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:700}
+.ring .label .n{font-size:20px}
+.ring .label .t{font-size:11px;color:var(--muted)}
+
+/* lists and tables */
+.list{display:flex;flex-direction:column;gap:8px}
+.audit-list{max-height:260px;overflow:auto;padding:6px 2px;margin:8px 0}
+.audit{padding:10px;border-radius:10px;background:rgba(255,255,255,0.015);display:flex;justify-content:space-between;gap:12px}
+.kv{color:var(--muted);font-size:13px}
+
+/* filmstrip */
+.filmstrip{display:flex;gap:10px;overflow:auto;padding-top:8px}
+.thumb{width:160px;height:90px;border-radius:8px;flex:0 0 auto;background:#0b1220;background-size:cover;background-position:center;border:1px solid rgba(255,255,255,0.03)}
+
+/* responsive */
+@media (max-width:1000px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:sticky;top:0;width:100%;display:flex;flex-direction:row;gap:12px;overflow:auto}
+  .main{padding:14px}
+  .col-4,.col-8{grid-column: span 12}
+  .ring{width:70px;height:70px}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand"><div class="dot"></div>PageSpeed ایران</div>
+    <div class="small">Material 3 — Full Lighthouse viewer</div>
+    <nav class="nav" style="margin-top:18px">
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Test</a>
+      <a href="#">History</a>
+      <a href="#">API</a>
+      <a href="#">Docs</a>
+    </nav>
+
+    <div style="margin-top:20px" class="small">بارگذاری خروجی:</div>
+    <input id="fileInput" type="file" accept=".json" style="margin-top:8px" />
+    <button id="loadBtn" class="btn" style="margin-top:10px;width:100%">بارگذاری و نمایش</button>
+    <button id="useSample" class="btn" style="margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)">بارگذاری از textarea</button>
+
+    <div style="margin-top:20px" class="small">تذکر</div>
+    <div class="small" style="opacity:0.85">
+      این پنل امکان paste کردن JSON هم دارد؛ اگر فایل‌تان در سرور است، endpoint متناظر را به fetch اضافه کنید.
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="header card">
+      <div style="display:flex;gap:14px;align-items:center">
+        <div style="font-weight:800">Dashboard</div>
+        <div class="kv">نتیجه PageSpeed — Renderer حرفه‌ای</div>
+      </div>
+      <div class="controls">
+        <div id="summarySmall" class="kv">فایل بارگذاری نشده</div>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <section class="grid" style="margin-top:18px">
+      <!-- OVERVIEW -->
+      <div class="card col-8">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:18px;font-weight:700">Overview</div>
+          <div class="kv" id="metaUrl">—</div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+          <div class="score-wrap" id="scores">
+            <!-- rings injected -->
+          </div>
+
+          <div style="width:55%;text-align:left">
+            <div class="kv">Core Web Vitals</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <div class="card" style="padding:12px;flex:1">
+                <div style="font-weight:700">LCP</div><div id="lcp" class="kv">—</div>
+              </div>
+              <div class="card" style="padding:12px;flex:1">
+                <div style="font-weight:700">CLS</div><div id="cls" class="kv">—</div>
+              </div>
+              <div class="card" style="padding:12px;flex:1">
+                <div style="font-weight:700">FCP</div><div id="fcp" class="kv">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- filmstrip -->
+        <div style="margin-top:16px">
+          <div style="font-weight:700">Filmstrip / Screenshots</div>
+          <div class="filmstrip" id="filmstrip"></div>
+        </div>
+      </div>
+
+      <!-- RESOURCE SUMMARY -->
+      <div class="card col-4">
+        <div style="font-weight:700">Resource Summary</div>
+        <div id="resourceSummary" class="list" style="margin-top:10px"></div>
+        <div style="margin-top:10px" class="kv" id="totalBytes">—</div>
+      </div>
+
+      <!-- OPPORTUNITIES -->
+      <div class="card col-12">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Opportunities (همه موارد)</div>
+          <div class="kv" id="oppCount">0 مورد</div>
+        </div>
+        <div class="audit-list" id="opportunities"></div>
+      </div>
+
+      <!-- DIAGNOSTICS & RENDER-BLOCKING -->
+      <div class="card col-4">
+        <div style="font-weight:700">Diagnostics</div>
+        <div id="diagnostics" style="margin-top:10px" class="kv">—</div>
+      </div>
+
+      <div class="card col-4">
+        <div style="font-weight:700">Render-blocking / Savings</div>
+        <div id="renderBlocking" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card col-4">
+        <div style="font-weight:700">Unused CSS</div>
+        <div id="unusedCss" style="margin-top:8px" class="kv">—</div>
+      </div>
+
+      <!-- PASSED AUDITS -->
+      <div class="card col-8">
+        <div style="font-weight:700">Passed audits (گزیده)</div>
+        <div id="passed" class="audit-list" style="margin-top:10px"></div>
+      </div>
+
+      <!-- RAW JSON -->
+      <div class="card col-12">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Raw / Full JSON (برای کپی)</div>
+          <div style="display:flex;gap:8px">
+            <button id="copyJson" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)">کپی JSON</button>
+            <button id="downloadJson" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)">دانلود</button>
+          </div>
+        </div>
+        <textarea id="raw" style="width:100%;height:180px;margin-top:12px;border-radius:10px;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text);"></textarea>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== JS: parse + render ===== -->
+<script>
+/*
+  Renderer for full Lighthouse JSON.
+  - Accepts file input (.json) OR paste into textarea (via a prompt).
+  - Produces rings, lists, filmstrip, and detailed sections.
+  - Designed to display everything present in typical PageSpeed JSON (audits, categories, details...).
+*/
+
+/* helper: create ring svg */
+function makeRing(percent, color){
+  const r=36, c=2*Math.PI*r, v=Math.max(0,Math.min(100,percent));
+  const offset=c*(1-v/100);
+  return `
+  <div class="ring">
+    <svg viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="g${Math.round(Math.random()*100000)}" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="${color}"/>
+          <stop offset="100%" stop-color="${color}"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"></circle>
+      <circle cx="50" cy="50" r="${r}" stroke="url(#g${Math.round(Math.random()*100000)})" stroke-width="10" fill="none"
+        stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"></circle>
+    </svg>
+    <div class="label"><div class="n">${v}</div><div class="t">score</div></div>
+  </div>`;
+}
+
+/* small formatters */
+function bytesToKb(b){ if(!b && b!==0) return '—'; return (b/1024).toFixed(1)+' KB'; }
+function msToSec(ms){ if(ms==null) return '—'; return (ms/1000).toFixed(2)+' s'; }
+
+const fileInput = document.getElementById('fileInput');
+const loadBtn = document.getElementById('loadBtn');
+const useSample = document.getElementById('useSample');
+const summarySmall = document.getElementById('summarySmall');
+
+loadBtn.onclick = ()=> {
+  const f = fileInput.files && fileInput.files[0];
+  if(!f) return alert('لطفاً فایل JSON را انتخاب کنید.');
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      renderAll(data);
+      document.getElementById('raw').value = JSON.stringify(data, null, 2);
+    }catch(err){ alert('خطا در خواندن JSON: '+err.message) }
+  };
+  reader.readAsText(f);
+};
+
+/* alternative: paste JSON */
+useSample.onclick = ()=>{
+  const txt = prompt('لطفاً JSON را اینجا paste کنید یا Cancel بزنید');
+  if(!txt) return;
+  try{
+    const data = JSON.parse(txt);
+    renderAll(data);
+    document.getElementById('raw').value = JSON.stringify(data, null, 2);
+  }catch(e){ alert('فرمت JSON نادرست است: '+e.message) }
+};
+
+/* copy / download */
+document.getElementById('copyJson').onclick = ()=>{
+  navigator.clipboard.writeText(document.getElementById('raw').value).then(()=>alert('کپی شد'));
+};
+document.getElementById('downloadJson').onclick = ()=>{
+  const blob = new Blob([document.getElementById('raw').value], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download = 'pagespeed-result.json'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+/* render function */
+function renderAll(res){
+  if(!res || !res.lighthouseResult) { alert('فایل معتبر نیست یا lighthouseResult ندارد'); return; }
+  const LR = res.lighthouseResult;
+  const cats = LR.categories || {};
+  const audits = LR.audits || {};
+  const meta = LR.requestedUrl || LR.finalUrl || res.id || '—';
+
+  // header
+  document.getElementById('metaUrl').innerText = meta;
+  summarySmall.innerText = (LR.fetchTime ? ('Fetched: '+ new Date(LR.fetchTime).toLocaleString()) : 'نتیجه بارگذاری شد');
+
+  // scores: try to show performance, accessibility, seo, best-practices
+  const scoresWrap = document.getElementById('scores');
+  scoresWrap.innerHTML = '';
+  const scMap = [
+    {k:'performance',t:'Performance', color:'#64ffda'},
+    {k:'accessibility',t:'Accessibility', color:'#8bff6b'},
+    {k:'best-practices',t:'Best', color:'#ffd36b'},
+    {k:'seo',t:'SEO', color:'#7c4dff'}
+  ];
+  scMap.forEach(s=>{
+    const obj = cats[s.k];
+    const percent = obj && typeof obj.score === 'number' ? Math.round(obj.score*100) : 0;
+    const html = makeRing(percent, s.color) + `<div style="text-align:center;margin-top:8px;font-weight:700">${s.t}</div>`;
+    const wrapper = document.createElement('div');
+    wrapper.style.textAlign='center';
+    wrapper.innerHTML = html;
+    scoresWrap.appendChild(wrapper);
+  });
+
+  // Core Web Vitals
+  const lcp = audits['largest-contentful-paint']?.displayValue || audits['largest-contentful-paint']?.numericValue || '—';
+  const fcp = audits['first-contentful-paint']?.displayValue || audits['first-contentful-paint']?.numericValue || '—';
+  const cls = audits['cumulative-layout-shift']?.displayValue || audits['cumulative-layout-shift']?.numericValue || '—';
+  document.getElementById('lcp').innerText = lcp;
+  document.getElementById('fcp').innerText = fcp;
+  document.getElementById('cls').innerText = cls;
+
+  // filmstrip / screenshot-thumbnails or fullPageScreenshot.screenshot
+  const film = document.getElementById('filmstrip'); film.innerHTML='';
+  const shots = (audits['screenshot-thumbnails'] && audits['screenshot-thumbnails'].details && audits['screenshot-thumbnails'].details.items)
+    || (LR.fullPageScreenshot && LR.fullPageScreenshot.screenshot && [LR.fullPageScreenshot.screenshot]);
+  if(shots && shots.length){
+    shots.slice(0,8).forEach(it=>{
+      const data = it.data || it.data;
+      const div = document.createElement('div'); div.className='thumb';
+      div.style.backgroundImage = `url(${data})`;
+      film.appendChild(div);
+    });
+  } else {
+    film.innerHTML = '<div class="kv">No screenshots in JSON</div>';
+  }
+
+  // Resource summary
+  const rs = audits['resource-summary']?.details?.items || res.lighthouseResult?.audits?.['resource-summary']?.details?.items || [];
+  const rsWrap = document.getElementById('resourceSummary'); rsWrap.innerHTML='';
+  if(rs.length){
+    rs.forEach(it=>{
+      const d = document.createElement('div'); d.className='kv';
+      d.innerHTML = `<div style="display:flex;justify-content:space-between"><div>${it.label}</div><div>${it.requestCount} req — ${bytesToKb(it.transferSize)}</div></div>`;
+      rsWrap.appendChild(d);
+    });
+  } else {
+    rsWrap.innerHTML = '<div class="kv">No resource summary</div>';
+  }
+  document.getElementById('totalBytes').innerText = 'Total bytes: ' + (res.lighthouseResult?.audits?.['resource-summary']?.details?.items?.find(i=>i.resourceType==='total')?.transferSize ? bytesToKb(res.lighthouseResult.audits['resource-summary'].details.items[0].transferSize) : '—');
+
+  // Opportunities
+  const oppEl = document.getElementById('opportunities'); oppEl.innerHTML='';
+  let oppCount=0;
+  Object.keys(audits).forEach(key=>{
+    const a = audits[key];
+    if(!a) return;
+    if(a.details && (a.details.type === 'opportunity' || a.scoreDisplayMode==='metricSavings')){
+      oppCount++;
+      const li = document.createElement('div'); li.className='audit';
+      const title = a.title || a.id || key;
+      const val = a.displayValue || (a.details && a.details.overallSavingsMs ? `Est ${a.details.overallSavingsMs} ms` : '');
+      const explain = a.description || '';
+      li.innerHTML = `<div style="flex:1"><div style="font-weight:700">${title}</div><div class="kv">${explain}</div></div><div style="min-width:160px;text-align:left">${val}</div>`;
+      oppEl.appendChild(li);
+    }
+  });
+  document.getElementById('oppCount').innerText = oppCount + ' مورد';
+
+  // Diagnostics
+  const diag = audits['diagnostics']?.details?.items?.[0] || audits['diagnostics']?.details || audits['diagnostics'];
+  document.getElementById('diagnostics').innerText = diag ? JSON.stringify(diag, null, 2) : '—';
+
+  // render-blocking insight
+  const rbi = audits['render-blocking-insight'];
+  if(rbi && rbi.details && rbi.details.items && rbi.details.items.length){
+    const rb = document.getElementById('renderBlocking'); rb.innerHTML='';
+    rbi.details.items.slice(0,8).forEach(it=>{
+      const el = document.createElement('div'); el.className='kv';
+      el.innerHTML = `<div style="font-weight:700">${it.url}</div><div>${bytesToKb(it.totalBytes)} — wasted ${it.wastedMs||0} ms</div>`;
+      rb.appendChild(el);
+    });
+  } else {
+    document.getElementById('renderBlocking').innerText = rbi?.displayValue || '—';
+  }
+
+  // unused css
+  const ucss = audits['unused-css-rules'];
+  if(ucss && ucss.details && ucss.details.items && ucss.details.items.length){
+    document.getElementById('unusedCss').innerText = (ucss.displayValue || '') + ' / savings: ' + (ucss.overallSavingsBytes ? bytesToKb(ucss.overallSavingsBytes) : '');
+  } else {
+    document.getElementById('unusedCss').innerText = ucss?.displayValue || '—';
+  }
+
+  // passed audits (select few where score === 1 or scoreDisplayMode === "notApplicable")
+  const passedWrap = document.getElementById('passed'); passedWrap.innerHTML='';
+  Object.keys(audits).forEach(k=>{
+    const a = audits[k];
+    if(!a) return;
+    const s = a.score;
+    if(s === 1 || a.scoreDisplayMode === 'notApplicable' || a.scoreDisplayMode === 'informative'){
+      const el = document.createElement('div'); el.className='audit';
+      el.innerHTML = `<div style="flex:1"><div style="font-weight:700">${a.title || k}</div><div class="kv">${a.displayValue||a.description||''}</div></div><div style="color:${(s===1)?'var(--success)':'var(--muted)'}">${(s===1)?'✔':'i'}</div>`;
+      passedWrap.appendChild(el);
+    }
+  });
+
+  // put long JSON into textarea
+  document.getElementById('raw').value = JSON.stringify(res, null, 2);
+}
+
+/* OPTIONAL: load the uploaded file path available on this environment (server may expose /mnt/data)
+   If you want to auto-load the uploaded server copy (only works if server serves it), uncomment and edit:
+fetch('/static/11.json').then(r=>r.json()).then(renderAll).catch(()=>{/* no auto-load });
+*/
+
+</script>
+</body>
+</html>
