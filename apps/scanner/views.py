@@ -8,7 +8,7 @@ def index(request):
 
 def pagespeed_check(request):
     url = request.GET.get("url")
-    if url.startswith("http://") is False and url.startswith("https://") is False:
+    if url.startswith("http://") is False or url.startswith("https://") is False:
         url = "http://" + url
     strategy = request.POST.get("strategy", "mobile")
     api_key = getattr(settings, "PAGESPEED_API_KEY", None)
