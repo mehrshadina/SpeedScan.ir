@@ -1,0 +1,44 @@
+{"render-blocking-insight": {
+  "id": "render-blocking-insight",
+  "title": "Render blocking requests",
+  "description": "Requests are blocking the page's initial render, which may delay LCP. [Deferring or inlining](https://developer.chrome.com/docs/performance/insights/render-blocking) can move these network requests out of the critical path.",
+  "score": 0.5,
+  "scoreDisplayMode": "metricSavings",
+  "metricSavings": {
+    "LCP": 0,
+    "FCP": 0
+  },
+  "details": {
+    "type": "table",
+    "headings": [
+      {
+        "label": "URL",
+        "key": "url",
+        "valueType": "url"
+      },
+      {
+        "key": "totalBytes",
+        "label": "Transfer Size",
+        "valueType": "bytes"
+      },
+      {
+        "valueType": "timespanMs",
+        "key": "wastedMs",
+        "label": "Duration"
+      }
+    ],
+    "items": [
+      {
+        "totalBytes": 10023,
+        "url": "https://irancell.ir/wp-content/themes/mtn_personal/assets/scss/pages/home-new.min.css?ver=5.1.6",
+        "wastedMs": 871
+      },
+      {
+        "totalBytes": 5644,
+        "url": "https://irancell.ir/wp-content/themes/mtn_personal/vendor/css/swiper.min.css?ver=12.0.2",
+        "wastedMs": 871
+      }
+    ]
+  }
+},
+}

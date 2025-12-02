@@ -6,10 +6,18 @@
 <title>PageSpeed ایران — Detailed Lighthouse Viewer</title>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <style>
-:root{--bg:#061023;--panel:#0b1220;--card-grad:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));--muted:#9aa8c0;--text:#e6eef8;--accent:#6750A4;--accent-2:#7c4dff;--success:#2ecc71;--warning:#ffb020;--danger:#ff6b6b;--glass:rgba(255,255,255,0.03);--radius:14px;--gap:18px;font-family:"Vazirmatn","Noto Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial;font-size:14px;}
+
+@font-face {
+  font-family: 'Vazir';
+  src: url('/static/fonts/Vazir.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root{--bg:#061023;--panel:#0b1220;--card-grad:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));--muted:#9aa8c0;--text:#e6eef8;--accent:#6750A4;--accent-2:#7c4dff;--success:#2ecc71;--warning:#ffb020;--danger:#ff6b6b;--glass:rgba(255,255,255,0.03);--radius:14px;--gap:18px;font-family: "Vazir", system-ui, -apple-system, "Segoe UI", Roboto, Arial;font-size:14px;}
 *{box-sizing:border-box}html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg), #04101b);color:var(--text)}a{color:inherit;text-decoration:none}.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh;gap:0}
 /* Sidebar */.sidebar{padding:28px 20px;background: rgba(255,255,255,0.02);border-right: 1px solid rgba(255,255,255,0.03);}.brand{display:flex;align-items:center;gap:12px;margin-bottom:12px}.brand .logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 8px 30px rgba(124,77,255,0.12);}.brand .title{font-weight:800;font-size:18px}.small{font-size:12px;color:var(--muted)}.nav{display:flex;flex-direction:column;gap:8px;margin-top:16px}.nav a{padding:10px;border-radius:10px;color:var(--muted);display:flex;gap:10px;align-items:center}.nav a.active,.nav a:hover{background:rgba(255,255,255,0.02);color:var(--text)}.quick{margin-top:18px;display:flex;flex-direction:column;gap:8px}.btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(124,77,255,0.12);}.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}.header{padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}.header .meta{display:flex;gap:12px;align-items:center}.main{padding:22px 24px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap)}.card{background:var(--card-grad);padding:16px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.02);box-shadow:0 8px 28px rgba(2,6,23,0.6);}.col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.card .section-title{font-weight:800;margin-bottom:8px}.kv{color:var(--muted);font-size:13px}.gauges{display:flex;gap:14px;align-items:center}.gauge{width:110px;height:110px;position:relative;display:flex;align-items:center;justify-content:center}.gauge svg{transform:rotate(-90deg);width:110px;height:110px}.gauge .label{position:absolute;text-align:center;font-weight:800}.gauge .label .num{font-size:20px}.gauge .label .sub{font-size:11px;color:var(--muted)}.row{display:flex;gap:12px;align-items:center}.audit-list{max-height:360px;overflow:auto;padding:6px;margin-top:8px;display:flex;flex-direction:column;gap:8px}.audit{padding:12px;border-radius:10px;background:rgba(255,255,255,0.015);display:flex;justify-content:space-between;gap:12px;align-items:center}.audit .left{flex:1}.audit .title{font-weight:700}.badge{padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px}.filmstrip{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:8px 0;background:var(--panel);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);}.thumb{width:160px;height:90px;border-radius:6px;background-size:cover;background-position:top;flex:0 0 auto;border:1px solid rgba(255,255,255,0.03);}.tabs{display:flex;gap:8px}.tab{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02);cursor:pointer;color:var(--muted)}.tab.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 8px 26px rgba(124,77,255,0.12)}textarea#raw{width:100%;height:260px;background:#071124;color:var(--text);border-radius:8px;padding:12px;border:1px solid rgba(255,255,255,0.03);resize:vertical}.sep{height:1px;background:rgba(255,255,255,0.02);margin:14px 0;border-radius:2px}.legend {display:flex;gap:8px;align-items:center}.legend .item{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:13px}@media (max-width:1000px){.app{grid-template-columns:1fr}.col-4,.col-6,.col-8{grid-column:span 12}.sidebar{position:sticky;top:0;padding:12px;display:flex;flex-direction:row;gap:12px;overflow:auto}.brand{display:none}.gauges{flex-wrap:wrap}.gauge{width:86px;height:86px}}
-/* موبایل: منوی sidebar راست همبرگری */
+
 @media (max-width:1000px){
   .app { grid-template-columns:1fr; }
   .sidebar {
@@ -72,6 +80,20 @@
   opacity: 1;
 }
 
+/* Tabs tweaks */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; }
+.tab { padding:8px 12px; border-radius:10px; background:transparent; border:1px solid rgba(255,255,255,0.02); cursor:pointer; color:var(--muted); font-weight:700; }
+.tab.active { background: linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; box-shadow:0 8px 26px rgba(124,77,255,0.12); }
+
+/* Audit item tweaks */
+.audit .title { font-weight:700; margin-bottom:4px; }
+.audit .kv { color:var(--muted); font-size:13px; }
+.audit-list::-webkit-scrollbar { height:6px; width:6px; }
+.audit-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.03); border-radius:6px; }
+
+/* Category score wrapper small */
+#catScoreWrap .gauge { display:inline-block; vertical-align:middle; margin-right:8px; }
+#catScoreWrap div:last-child { display:inline-block; vertical-align:middle; font-weight:800; margin-left:6px; color:var(--text); }
 
 
 </style>
@@ -178,7 +200,7 @@
         </div>
 
         <!-- Metadata Block -->
-        <div class="card" style="margin-top:12px; padding:10px;">
+        <!--div class="card" style="margin-top:12px; padding:10px;">
           <div class="metadata-grid" style="display:flex; flex-wrap:wrap; gap:12px;">
             
             <div class="meta-item">
@@ -212,7 +234,7 @@
             </div>
 
           </div>
-        </div>
+        </div-->
 
         <div style="font-weight:700;margin-bottom:8px; margin-top: 8px;">Filmstrip</div>
         <div class="filmstrip" id="filmstrip"></div>
@@ -220,26 +242,23 @@
 
 
 
-      <div class="card col-12">
+      <div class="card col-12" id="categoriesCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
             <div style="font-weight:800">Categories</div>
             <div class="kv">نمایش کامل برای هر دسته</div>
           </div>
           <div class="tabs" id="categoryTabs" role="tablist">
-            <button class="tab active" data-cat="performance">Performance</button>
-            <button class="tab" data-cat="accessibility">Accessibility</button>
-            <button class="tab" data-cat="best-practices">Best Practices</button>
-            <button class="tab" data-cat="seo">SEO</button>
-            <button class="tab" data-cat="pwa">PWA</button>
+            <!-- تب‌ها با JS ساخته می‌شوند -->
           </div>
         </div>
 
-        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:18px">
+        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:18px;align-items:center">
           <div style="flex:1">
-            <div id="catTitle" style="font-weight:700">Performance</div>
+            <div id="catTitle" style="font-weight:700">—</div>
             <div id="catDesc" class="kv">—</div>
           </div>
+
           <div style="width:360px">
             <div style="font-weight:700">Category Score</div>
             <div id="catScoreWrap" style="margin-top:8px"></div>
@@ -253,6 +272,7 @@
             <div style="font-weight:700">Opportunities</div>
             <div class="audit-list" id="opportunities"></div>
           </div>
+
           <div>
             <div style="font-weight:700">Diagnostics</div>
             <div class="audit-list" id="diagnostics"></div>
@@ -262,12 +282,12 @@
 
       <div class="card col-4">
         <div style="font-weight:700">Render-blocking / Savings</div>
-        <div id="renderBlocking" class="kv">—</div>
+        <div class="audit-list" id="renderBlocking" class="kv">—</div>
       </div>
 
       <div class="card col-4">
         <div style="font-weight:700">Unused CSS</div>
-        <div id="unusedCss" class="kv">—</div>
+        <div class="audit-list" id="unusedCss" class="kv">—</div>
       </div>
 
       <div class="card col-4">
@@ -286,7 +306,9 @@
 </div>
 
 <script>
-// ---------- Helpers ----------
+// -----------------------------------------------------
+// --------------------- Helpers ------------------------
+// -----------------------------------------------------
 function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
 function scoreColor(score){
   if(score==null) return 'var(--muted)';
@@ -320,103 +342,86 @@ function auditSeverity(a){
   return {label:'—', color:'var(--muted)'};
 }
 
-// ---------- Main render ----------
+
+// -----------------------------------------------------
+// --------------------- Main Render ---------------------
+// -----------------------------------------------------
 function renderAll(res){
   if(!res?.lighthouseResult) return console.error('Invalid Lighthouse JSON');
   const LR=res.lighthouseResult;
   const cats=LR.categories||{}, audits=LR.audits||{};
-  const finalUrl=res.finalUrl||LR.finalUrl||LR.requestedUrl||'—';
-  document.getElementById('metaUrl').innerText=finalUrl;
+
+  // URL + Fetch time
+  document.getElementById('metaUrl').innerText=res.finalUrl||LR.finalUrl||LR.requestedUrl||'—';
   document.getElementById('fetchTime').innerText=LR.fetchTime?new Date(LR.fetchTime).toLocaleString():'';
 
   // Gauges
   const gaugeMap=[{k:'performance',title:'Performance'},{k:'accessibility',title:'Accessibility'},{k:'best-practices',title:'Best Practices'},{k:'seo',title:'SEO'}];
-  const gaugesWrap=document.getElementById('gauges'); gaugesWrap.innerHTML='';
+  const gaugesWrap=document.getElementById('gauges'); 
+  gaugesWrap.innerHTML='';
   gaugeMap.forEach(g=>{
     const score=(cats[g.k]?.score??0)*100;
-    const div=document.createElement('div'); div.style.textAlign='center';
+    const div=document.createElement('div'); 
+    div.style.textAlign='center';
     div.innerHTML=makeGauge(score)+`<div style="margin-top:6px;font-weight:700">${g.title}</div>`;
     gaugesWrap.appendChild(div);
   });
 
-  // Core Web Vitals
-  function scoreColorMetric(score, metricId){
-    if(score == null) return 'var(--muted)';
+  // ---------------- Core Web Vitals Coloring ----------------
+  function scoreColorMetric(v, id){
+    if(v==null) return 'var(--muted)';
 
-    switch(metricId){
-      case 'cls': // CLS: پایین بهتر
-        if(score <= 0.1) return 'var(--success)';
-        if(score <= 0.25) return 'var(--warning)';
-        return 'var(--danger)';
+    if(id==='cls'){ if(v<=0.1) return 'var(--success)'; if(v<=0.25) return 'var(--warning)'; return 'var(--danger)'; }
+    if(id==='tbt'){ if(v<=200) return 'var(--success)'; if(v<=600) return 'var(--warning)'; return 'var(--danger)'; }
+    if(id==='lcp' || id==='fcp'){ if(v<=1800) return 'var(--success)'; if(v<=3000) return 'var(--warning)'; return 'var(--danger)'; }
+    if(id==='speedIndex'){ if(v<=1800) return 'var(--success)'; if(v<=3000) return 'var(--warning)'; return 'var(--danger)'; }
 
-      case 'tbt': // TBT: پایین بهتر
-        if(score <= 200) return 'var(--success)';  // 0ms → سبز
-        if(score <= 600) return 'var(--warning)';
-        return 'var(--danger)';
-
-      case 'fcp': // FCP: پایین بهتر
-      case 'lcp': // LCP: پایین بهتر
-        if(score <= 1800) return 'var(--success)'; // میلی ثانیه یا ms
-        if(score <= 3000) return 'var(--warning)';
-        return 'var(--danger)';
-
-      case 'speedIndex': // Speed Index: پایین بهتر
-        if(score <= 1800) return 'var(--success)';
-        if(score <= 3000) return 'var(--warning)';
-        return 'var(--danger)';
-
-      default:
-        // برای متریک‌های درصدی یا score
-        if(score >= 90) return 'var(--success)';
-        if(score >= 50) return 'var(--warning)';
-        return 'var(--danger)';
-    }
+    return scoreColor(v);
   }
 
-
-  function setMetric(id, value, numericValue){
-    const el = document.getElementById(id);
-    const v = value || numericValue || '—';
-    el.innerText = v;
-    if(numericValue != null) {
-      el.style.color = scoreColorMetric(numericValue, id);
-    } else {
-      el.style.color = 'var(--muted)';
-    }
+  function setMetric(id, display, num){
+    const el=document.getElementById(id);
+    el.innerText=display||num||'—';
+    el.style.color=num!=null?scoreColorMetric(num,id):'var(--muted)';
   }
 
-  // Core Web Vitals
   setMetric('lcp', audits['largest-contentful-paint']?.displayValue, audits['largest-contentful-paint']?.numericValue);
   setMetric('fcp', audits['first-contentful-paint']?.displayValue, audits['first-contentful-paint']?.numericValue);
   setMetric('cls', audits['cumulative-layout-shift']?.displayValue, audits['cumulative-layout-shift']?.numericValue);
 
-  // Additional Metrics
   setMetric('tbt', audits['total-blocking-time']?.displayValue, audits['total-blocking-time']?.numericValue);
   setMetric('speedIndex', audits['speed-index']?.displayValue, audits['speed-index']?.numericValue);
 
-  // Filmstrip
+  // ---------------- Filmstrip (crop fix: top aligned) ----------------
   const filmEl=document.getElementById('filmstrip'); filmEl.innerHTML='';
   const shots=audits['screenshot-thumbnails']?.details?.items || (LR.fullPageScreenshot?.screenshot?[LR.fullPageScreenshot.screenshot]:[]);
   if(shots.length){
     shots.slice(0,8).forEach(it=>{
       const data=it.data||it.screenshot||it;
-      const d=document.createElement('div'); d.className='thumb'; d.style.backgroundImage=`url(${data})`;
+      const d=document.createElement('div'); 
+      d.className='thumb';
+      d.style.backgroundImage=`url(${data})`;
+      d.style.backgroundPosition='top';     // مهم — نمایش از بالاترین قسمت
+      d.style.backgroundSize='cover';
       filmEl.appendChild(d);
     });
   } else filmEl.innerHTML='<div class="kv">No screenshots</div>';
 
-  // Resource summary
+  // ---------------- Resource Summary ----------------
   const rsItems=audits['resource-summary']?.details?.items||[];
-  const rsWrap=document.getElementById('resourceSummary'); rsWrap.innerHTML='';
+  const rsWrap=document.getElementById('resourceSummary'); 
+  rsWrap.innerHTML='';
   if(rsItems.length){
     rsItems.forEach(it=>{
-      rsWrap.innerHTML+=`<div style="display:flex;justify-content:space-between"><div class="kv">${it.label}</div><div class="kv">${it.requestCount} req — ${bytesToKB(it.transferSize)}</div></div>`;
+      rsWrap.innerHTML+=`<div style="display:flex;justify-content:space-between">
+        <div class="kv">${it.label}</div>
+        <div class="kv">${it.requestCount} req — ${bytesToKB(it.transferSize)}</div>
+      </div>`;
     });
-    const total=rsItems.reduce((a,b)=>a+(b.transferSize||0),0);
-    document.getElementById('totalBytes').innerText='Total: '+bytesToKB(total);
+    document.getElementById('totalBytes').innerText='Total: '+bytesToKB(rsItems.reduce((s,x)=>s+x.transferSize,0));
   } else { rsWrap.innerText='—'; document.getElementById('totalBytes').innerText='—'; }
 
-  // Helper to render audits
+  // ---------------- Audit renderer ----------------
   function renderAudits(list, container){
     container.innerHTML='';
     if(!list.length){ container.innerHTML='<div class="kv">No items</div>'; return; }
@@ -424,54 +429,129 @@ function renderAll(res){
       const val=a.displayValue|| (a.details?.overallSavingsMs?`~ ${a.details.overallSavingsMs} ms`:'');
       const sev=auditSeverity(a);
       const node=document.createElement('div'); node.className='audit';
-      node.innerHTML=`<div class="left"><div class="title">${a.title||a.id}</div><div class="kv">${a.description||''}</div></div>
-                      <div style="text-align:left"><div style="margin-bottom:6px">${val}</div>
-                      <div class="badge" style="background:${sev.color};color:#06121a">${sev.label}</div></div>`;
+      node.innerHTML=`
+        <div class="left">
+          <div class="title">${a.title||a.id}</div>
+          <div class="kv">${a.description||''}</div>
+        </div>
+        <div style="text-align:left">
+          <div style="margin-bottom:6px">${val}</div>
+          <div class="badge" style="background:${sev.color};color:#06121a">${sev.label}</div>
+        </div>`;
       container.appendChild(node);
     });
   }
 
-  // Opportunities & Diagnostics
-  const opps=Object.values(audits).filter(a=>a.details?.type==='opportunity' || a.scoreDisplayMode==='metricSavings');
-  renderAudits(opps, document.getElementById('opportunities'));
-  const diags=Object.values(audits).filter(a=>['informative','manual'].includes(a.scoreDisplayMode) || a.id==='diagnostics');
-  renderAudits(diags, document.getElementById('diagnostics'));
+  // ---------------- Small panels ----------------
+  const rb = audits['render-blocking-insight'];
+  const rbEl = document.getElementById('renderBlocking');
+  rbEl.innerText = rb?.details?.items?.slice(0,10).map(it=>`${it.url} — ${bytesToKB(it.totalBytes)} — wasted ${it.wastedMs||0} ms`).join('\n') 
+                  || rb?.displayValue || '—';
+  rbEl.style.whiteSpace = 'pre-wrap';
 
-  // Small panels
-  const rbi=audits['render-blocking-resources'];
-  document.getElementById('renderBlocking').innerText=rbi?.details?.items?.slice(0,10).map(it=>`${it.url} — ${bytesToKB(it.totalBytes)} — wasted ${it.wastedMs||0} ms`).join('\n') || rbi?.displayValue||'—';
-  const ucss=audits['unused-css-rules'];
-  document.getElementById('unusedCss').innerText=ucss?.displayValue || (ucss?.overallSavingsBytes?`Savings: ${bytesToKB(ucss.overallSavingsBytes)}`:'—');
+  const ucss = audits['unused-css-rules'];
+  const ucssEl = document.getElementById('unusedCss');
 
-  // Passed audits
+  if(ucss?.details?.items?.length){
+    ucssEl.innerHTML = ucss.details.items.map(it => {
+      return `${it.url} — ${bytesToKB(it.totalBytes)} — wasted ${bytesToKB(it.wastedBytes)}`;
+    }).join('\n');
+  } else if(ucss?.displayValue){
+    ucssEl.innerText = ucss.displayValue;
+  } else if(ucss?.overallSavingsBytes){
+    ucssEl.innerText = `Savings: ${bytesToKB(ucss.overallSavingsBytes)}`;
+  } else {
+    ucssEl.innerText = '—';
+  }
+
+  ucssEl.style.whiteSpace = 'pre-wrap'; // برای multiline
+
+
+
+
+  // ---------------- PASSED AUDITS ----------------
   const passed=document.getElementById('passed'); passed.innerHTML='';
   Object.values(audits).forEach(a=>{
     if(a.score===1 || a.scoreDisplayMode==='notApplicable'){
       const sev=auditSeverity(a);
       const node=document.createElement('div'); node.className='audit';
-      node.innerHTML=`<div class="left"><div class="title">${a.title||a.id}</div><div class="kv">${a.displayValue||a.description||''}</div></div><div style="color:${sev.color}">✔</div>`;
+      node.innerHTML=`
+        <div class="left">
+          <div class="title">${a.title||a.id}</div>
+          <div class="kv">${a.displayValue||a.description||''}</div>
+        </div>
+        <div style="color:${sev.color}">✔</div>`;
       passed.appendChild(node);
     }
   });
   if(!passed.children.length) passed.innerHTML='<div class="kv">No passed audits</div>';
 
-  // Category tabs
-  const tabs=document.querySelectorAll('[data-cat]');
-  function showCategory(catKey){
-    const cat=cats[catKey];
-    document.getElementById('catTitle').innerText=cat?.title||catKey;
-    document.getElementById('catDesc').innerText=cat?.description||'';
-    const score=(cat?.score??0)*100;
-    document.getElementById('catScoreWrap').innerHTML=makeGauge(score,80)+`<div style="margin-top:8px">${Math.round(score)}</div>`;
-    const catOpps=Object.values(audits).filter(a=>a.details?.type==='opportunity' && ((a.group||'').toLowerCase()===catKey || (a.id||'').toLowerCase().includes(catKey)));
-    const catDiags=Object.values(audits).filter(a=>['informative','manual'].includes(a.scoreDisplayMode) || a.id==='diagnostics');
-    renderAudits(catOpps, document.getElementById('opportunities'));
-    renderAudits(catDiags, document.getElementById('diagnostics'));
-  }
-  tabs.forEach(t=>t.onclick=()=>{ tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active'); showCategory(t.dataset.cat); });
-  showCategory(document.querySelector('[data-cat].active')?.dataset.cat||'performance');
 
-  // Raw JSON
+  // -----------------------------------------------------
+  // ----------------------- Categories -------------------
+  // -----------------------------------------------------
+  (function setupCategories(){
+    const tabs=document.getElementById('categoryTabs');
+    tabs.innerHTML='';
+
+    const catKeys=Object.keys(cats).length 
+      ? Object.keys(cats) 
+      : ['performance','accessibility','best-practices','seo','pwa'];
+
+    const preferred=['performance','accessibility','best-practices','seo','pwa'];
+    const ordered = preferred.filter(k=>catKeys.includes(k)).concat(catKeys.filter(k=>!preferred.includes(k)));
+
+    ordered.forEach((k,i)=>{
+      const b=document.createElement('button');
+      b.className='tab'+(i===0?' active':'');
+      b.dataset.cat=k;
+      b.innerText=cats[k]?.title || k.toUpperCase();
+      b.onclick=()=>{
+        document.querySelectorAll('#categoryTabs .tab').forEach(t=>t.classList.remove('active'));
+        b.classList.add('active');
+        showCat(k);
+      };
+      tabs.appendChild(b);
+    });
+
+    function showCat(k){
+      const cat=cats[k] || {title:k, description:''};
+      document.getElementById('catTitle').innerText=cat.title;
+      document.getElementById('catDesc').innerText=cat.description;
+
+      const score=Math.round((cat.score??0)*100);
+      document.getElementById('catScoreWrap').innerHTML = 
+        makeGauge(score,80)+`<div style="margin-top:8px">${score}</div>`;
+
+      const ids=(cat.auditRefs||[]).map(r=>r.id).filter(Boolean);
+      let list=ids.map(id=>audits[id]).filter(Boolean);
+
+      let opp=list.filter(a=>a.details?.type==='opportunity' || a.scoreDisplayMode==='metricSavings');
+      let diag=list.filter(a=>['informative','manual','notApplicable'].includes(a.scoreDisplayMode) || (typeof a.score!=='number' && a.details?.type!=='opportunity'));
+
+      if(!ids.length){
+        const key=k.toLowerCase();
+        const all=Object.values(audits);
+        opp=all.filter(a=>(a.details?.type==='opportunity' || a.scoreDisplayMode==='metricSavings') && ((a.id||'').toLowerCase().includes(key)));
+        diag=all.filter(a=>(['informative','manual','notApplicable'].includes(a.scoreDisplayMode)) && ((a.id||'').toLowerCase().includes(key)));
+      }
+
+      opp.sort((A,B)=>((B.details?.overallSavingsMs||0)+(B.details?.overallSavingsBytes||0))-((A.details?.overallSavingsMs||0)+(A.details?.overallSavingsBytes||0)));
+      diag.sort((A,B)=>(A.id||'').localeCompare(B.id||''));
+
+      renderAudits(opp,document.getElementById('opportunities'));
+      renderAudits(diag,document.getElementById('diagnostics'));
+
+      if(!opp.length) document.getElementById('opportunities').innerHTML='<div class="kv">No opportunities</div>';
+      if(!diag.length) document.getElementById('diagnostics').innerHTML='<div class="kv">No diagnostics</div>';
+    }
+
+    showCat(ordered[0]||'performance');
+  })();
+
+  // -----------------------------------------------------
+  // ----------------------- raw -------------------
+  // -----------------------------------------------------
   const raw=document.getElementById('raw'); raw.value=JSON.stringify(res,null,2);
   document.getElementById('copyJsonBtn').onclick=()=>navigator.clipboard.writeText(JSON.stringify(res,null,2)).then(()=>alert('JSON کپی شد'));
   document.getElementById('downloadJsonBtn').onclick=()=>{
@@ -479,73 +559,17 @@ function renderAll(res){
     const a=document.createElement('a'); a.href=url; a.download='pagespeed-result.json'; a.click(); URL.revokeObjectURL(url);
   };
 
-  function renderTestMeta(lhr) {
-  const metaEl = document.getElementById('testMeta');
-  metaEl.innerHTML = ''; // خالی کردن محتوا
-
-  // اطلاعات
-  const fetchTime = new Date(lhr?.fetchTime || Date.now());
-  const strategy = lhr?.configSettings?.formFactor || 'mobile';
-  const lighthouseVersion = lhr?.lighthouseVersion || '—';
-  const sessionType = "Single page session";
-  const loadType = "Initial page load";
-  const throttling = lhr?.configSettings?.throttling || "Custom throttling";
-  const browser = lhr?.environment?.benchmarkIndex 
-                  ? `Using HeadlessChromium ${lhr.environment.benchmarkIndex}` 
-                  : "Using HeadlessChromium";
-
-  const metaItems = [
-    {
-      text: `Captured at ${fetchTime.toLocaleString('fa-IR')}`,
-      tooltip: "زمان دقیق اجرای تست"
-    },
-    {
-      text: `Emulated ${strategy} with Lighthouse ${lighthouseVersion}`,
-      tooltip: "نوع دستگاه شبیه‌سازی شده و نسخه Lighthouse"
-    },
-    {
-      text: sessionType,
-      tooltip: "جلسه یک صفحه‌ای برای تست"
-    },
-    {
-      text: loadType,
-      tooltip: "نوع بارگذاری اولیه صفحه"
-    },
-    {
-      text: throttling,
-      tooltip: "تنظیمات شبیه‌سازی شبکه و CPU"
-    },
-    {
-      text: browser,
-      tooltip: "مرورگر Headless که تست با آن انجام شده"
-    }
-  ];
-
-  metaItems.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'meta-item';
-    div.innerText = item.text;
-
-    const span = document.createElement('span');
-    span.className = 'tooltip';
-    span.innerText = item.tooltip;
-
-    div.appendChild(span);
-    metaEl.appendChild(div);
-  });
 }
 
-const lhr = res.lighthouseResult; // JSON Lighthouse از API
-renderTestMeta(lhr);
 
-
-}
-
-// ---------- Render on page load ----------
+// -----------------------------------------------------
+// ----------------------- RUN --------------------------
+// -----------------------------------------------------
 {% if raw_json %}
-  const pagespeedData = {{ raw_json|safe }};
-  renderAll(pagespeedData);
+const pagespeedData = {{ raw_json|safe }};
+renderAll(pagespeedData);
 {% endif %}
 </script>
+
 </body>
 </html>

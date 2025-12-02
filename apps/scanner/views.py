@@ -8,6 +8,8 @@ def index(request):
 
 def pagespeed_check(request):
     url = request.GET.get("url")
+    if url.startswith("http://") is False and url.startswith("https://") is False:
+        url = "http://" + url
     strategy = request.POST.get("strategy", "mobile")
     api_key = getattr(settings, "PAGESPEED_API_KEY", None)
 
@@ -29,5 +31,6 @@ def pagespeed_check(request):
 
     # تبدیل به JSON رشته‌ای برای JS
     raw_json = json.dumps(data, ensure_ascii=False)
+    print(raw_json)
 
     return render(request, "result.html", {"raw_json": raw_json})
