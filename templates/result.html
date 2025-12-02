@@ -443,28 +443,51 @@ function renderAll(res){
   }
 
   // ---------------- Small panels ----------------
-  const rb = audits['render-blocking-insight'];
+  const rb = audits['render-blocking-insight'] || audits['render-blocking-resources'];
   const rbEl = document.getElementById('renderBlocking');
-  rbEl.innerText = rb?.details?.items?.slice(0,10).map(it=>`${it.url} — ${bytesToKB(it.totalBytes)} — wasted ${it.wastedMs||0} ms`).join('\n') 
-                  || rb?.displayValue || '—';
-  rbEl.style.whiteSpace = 'pre-wrap';
+  rbEl.innerHTML = '';
 
-  const ucss = audits['unused-css-rules'];
-  const ucssEl = document.getElementById('unusedCss');
-
-  if(ucss?.details?.items?.length){
-    ucssEl.innerHTML = ucss.details.items.map(it => {
-      return `${it.url} — ${bytesToKB(it.totalBytes)} — wasted ${bytesToKB(it.wastedBytes)}`;
-    }).join('\n');
-  } else if(ucss?.displayValue){
-    ucssEl.innerText = ucss.displayValue;
-  } else if(ucss?.overallSavingsBytes){
-    ucssEl.innerText = `Savings: ${bytesToKB(ucss.overallSavingsBytes)}`;
+  if(rb?.details?.items?.length){
+    rb.details.items.slice(0,10).forEach(it=>{
+      const node = document.createElement('div'); 
+      node.className = 'audit';
+      node.innerHTML = `
+        <div class="left">
+          <div class="title">${it.url}</div>
+          <div class="kv">Total: ${bytesToKB(it.totalBytes)} — wasted: ${it.wastedMs||0} ms</div>
+        </div>`;
+      rbEl.appendChild(node);
+    });
+  } else if(rb?.displayValue){
+    rbEl.innerHTML = `<div class="kv">${rb.displayValue}</div>`;
   } else {
-    ucssEl.innerText = '—';
+    rbEl.innerHTML = '<div class="kv">—</div>';
   }
 
-  ucssEl.style.whiteSpace = 'pre-wrap'; // برای multiline
+  // ---------------- Unused CSS ----------------
+  const ucss = audits['unused-css-rules'];
+  const ucssEl = document.getElementById('unusedCss');
+  ucssEl.innerHTML = '';
+
+  if(ucss?.details?.items?.length){
+    ucss.details.items.forEach(it=>{
+      const node = document.createElement('div'); 
+      node.className = 'audit';
+      node.innerHTML = `
+        <div class="left">
+          <div class="title">${it.url}</div>
+          <div class="kv">Total: ${bytesToKB(it.totalBytes)} — wasted: ${bytesToKB(it.wastedBytes)}</div>
+        </div>`;
+      ucssEl.appendChild(node);
+    });
+  } else if(ucss?.displayValue){
+    ucssEl.innerHTML = `<div class="kv">${ucss.displayValue}</div>`;
+  } else if(ucss?.overallSavingsBytes){
+    ucssEl.innerHTML = `<div class="kv">Savings: ${bytesToKB(ucss.overallSavingsBytes)}</div>`;
+  } else {
+    ucssEl.innerHTML = '<div class="kv">—</div>';
+  }
+
 
 
 
