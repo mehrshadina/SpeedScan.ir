@@ -5,7 +5,8 @@ app_name = "scanner"
 
 urlpatterns = [
     path('', index, name='index'),
-    path('pagespeed-check/', pagespeed_check, name='pagespeed_check'),  # نمایش نتیجه تست
+    path('pagespeed-check-api/', pagespeed_check_api, name='pagespeed_check'),  # نمایش نتیجه تست
+    path('pagespeed-result/<uuid:access_link>/', pagespeed_result, name='pagespeed_result'),
     #path('about/', about, name='about'),
     #path('faq/', faq, name='faq'),
     #path('contact/', contact, name='contact'),

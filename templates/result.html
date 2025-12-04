@@ -306,19 +306,19 @@
 </div>
 
 <script>
-// -----------------------------------------------------
 // --------------------- Helpers ------------------------
-// -----------------------------------------------------
 function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
+
 function scoreColor(score){
   if(score==null) return 'var(--muted)';
   if(score>=90) return 'var(--success)';
   if(score>=50) return 'var(--warning)';
   return 'var(--danger)';
 }
+
 function makeGauge(score,size=110){
   const r=36,c=2*Math.PI*r,v=clamp(Math.round(score),0,100),offset=c*(1-v/100);
-  const color=scoreColor(v);
+  const color=scoreColor(score);
   return `<div class="gauge" title="${v}">
     <svg viewBox="0 0 100 100" width="${size}" height="${size}">
       <circle cx="50" cy="50" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"></circle>
@@ -328,8 +328,10 @@ function makeGauge(score,size=110){
     <div class="label"><div class="num">${v}</div><div class="sub">score</div></div>
   </div>`;
 }
+
 function safeText(s){return s==null?'—':String(s);}
 function bytesToKB(b){return b==null?'—':(b/1024).toFixed(1)+' KB';}
+
 function auditSeverity(a){
   if(a.scoreDisplayMode==='notApplicable') return {label:'N/A', color:'var(--muted)'};
   if(a.scoreDisplayMode==='informative') return {label:'Info', color:'var(--muted)'};
@@ -338,61 +340,59 @@ function auditSeverity(a){
     if(a.score>=0.5) return {label:'Needs work', color:'var(--warning)'};
     return {label:'Fail', color:'var(--danger)'};
   }
-  if(a.details?.type==='opportunity') return {label:'Opportunity', color:'var(--warning)'};
+  if(a.details?.type==='opportunity' || a.scoreDisplayMode==='metricSavings') return {label:'Opportunity', color:'var(--warning)'};
   return {label:'—', color:'var(--muted)'};
 }
 
-
-// -----------------------------------------------------
 // --------------------- Main Render ---------------------
-// -----------------------------------------------------
 function renderAll(res){
   if(!res?.lighthouseResult) return console.error('Invalid Lighthouse JSON');
   const LR=res.lighthouseResult;
   const cats=LR.categories||{}, audits=LR.audits||{};
 
-  // URL + Fetch time
+  // Meta
   document.getElementById('metaUrl').innerText=res.finalUrl||LR.finalUrl||LR.requestedUrl||'—';
-  document.getElementById('fetchTime').innerText=LR.fetchTime?new Date(LR.fetchTime).toLocaleString():'';
+  document.getElementById('fetchTime').innerText=LR.fetchTime?new Date(LR.fetchTime).toLocaleString():'—';
 
   // Gauges
   const gaugeMap=[{k:'performance',title:'Performance'},{k:'accessibility',title:'Accessibility'},{k:'best-practices',title:'Best Practices'},{k:'seo',title:'SEO'}];
   const gaugesWrap=document.getElementById('gauges'); 
   gaugesWrap.innerHTML='';
   gaugeMap.forEach(g=>{
-    const score=(cats[g.k]?.score??0)*100;
+    const scoreRaw=cats[g.k]?.score;
+    const score=scoreRaw!=null?scoreRaw*100:null;
     const div=document.createElement('div'); 
     div.style.textAlign='center';
     div.innerHTML=makeGauge(score)+`<div style="margin-top:6px;font-weight:700">${g.title}</div>`;
     gaugesWrap.appendChild(div);
   });
 
-  // ---------------- Core Web Vitals Coloring ----------------
+  // Core Web Vitals
   function scoreColorMetric(v, id){
     if(v==null) return 'var(--muted)';
-
-    if(id==='cls'){ if(v<=0.1) return 'var(--success)'; if(v<=0.25) return 'var(--warning)'; return 'var(--danger)'; }
-    if(id==='tbt'){ if(v<=200) return 'var(--success)'; if(v<=600) return 'var(--warning)'; return 'var(--danger)'; }
-    if(id==='lcp' || id==='fcp'){ if(v<=1800) return 'var(--success)'; if(v<=3000) return 'var(--warning)'; return 'var(--danger)'; }
-    if(id==='speedIndex'){ if(v<=1800) return 'var(--success)'; if(v<=3000) return 'var(--warning)'; return 'var(--danger)'; }
-
-    return scoreColor(v);
+    switch(id){
+      case 'cls': return v<=0.1?'var(--success)':v<=0.25?'var(--warning)':'var(--danger)';
+      case 'tbt': return v<=200?'var(--success)':v<=600?'var(--warning)':'var(--danger)';
+      case 'lcp':
+      case 'fcp':
+      case 'speedIndex': return v<=1800?'var(--success)':v<=3000?'var(--warning)':'var(--danger)';
+      default: return scoreColor(v);
+    }
   }
 
   function setMetric(id, display, num){
     const el=document.getElementById(id);
-    el.innerText=display||num||'—';
+    el.innerText=display|| (num!=null?Math.round(num):'—');
     el.style.color=num!=null?scoreColorMetric(num,id):'var(--muted)';
   }
 
   setMetric('lcp', audits['largest-contentful-paint']?.displayValue, audits['largest-contentful-paint']?.numericValue);
   setMetric('fcp', audits['first-contentful-paint']?.displayValue, audits['first-contentful-paint']?.numericValue);
   setMetric('cls', audits['cumulative-layout-shift']?.displayValue, audits['cumulative-layout-shift']?.numericValue);
-
   setMetric('tbt', audits['total-blocking-time']?.displayValue, audits['total-blocking-time']?.numericValue);
   setMetric('speedIndex', audits['speed-index']?.displayValue, audits['speed-index']?.numericValue);
 
-  // ---------------- Filmstrip (crop fix: top aligned) ----------------
+  // Filmstrip
   const filmEl=document.getElementById('filmstrip'); filmEl.innerHTML='';
   const shots=audits['screenshot-thumbnails']?.details?.items || (LR.fullPageScreenshot?.screenshot?[LR.fullPageScreenshot.screenshot]:[]);
   if(shots.length){
@@ -401,13 +401,13 @@ function renderAll(res){
       const d=document.createElement('div'); 
       d.className='thumb';
       d.style.backgroundImage=`url(${data})`;
-      d.style.backgroundPosition='top';     // مهم — نمایش از بالاترین قسمت
+      d.style.backgroundPosition='top';
       d.style.backgroundSize='cover';
       filmEl.appendChild(d);
     });
   } else filmEl.innerHTML='<div class="kv">No screenshots</div>';
 
-  // ---------------- Resource Summary ----------------
+  // Resource Summary
   const rsItems=audits['resource-summary']?.details?.items||[];
   const rsWrap=document.getElementById('resourceSummary'); 
   rsWrap.innerHTML='';
@@ -421,12 +421,12 @@ function renderAll(res){
     document.getElementById('totalBytes').innerText='Total: '+bytesToKB(rsItems.reduce((s,x)=>s+x.transferSize,0));
   } else { rsWrap.innerText='—'; document.getElementById('totalBytes').innerText='—'; }
 
-  // ---------------- Audit renderer ----------------
+  // Audit Renderer
   function renderAudits(list, container){
     container.innerHTML='';
     if(!list.length){ container.innerHTML='<div class="kv">No items</div>'; return; }
     list.forEach(a=>{
-      const val=a.displayValue|| (a.details?.overallSavingsMs?`~ ${a.details.overallSavingsMs} ms`:'');
+      const val=a.displayValue || (a.details?.overallSavingsMs?`~ ${a.details.overallSavingsMs} ms`:'');
       const sev=auditSeverity(a);
       const node=document.createElement('div'); node.className='audit';
       node.innerHTML=`
@@ -442,11 +442,9 @@ function renderAll(res){
     });
   }
 
-  // ---------------- Small panels ----------------
+  // Small panels: Render-blocking
   const rb = audits['render-blocking-insight'] || audits['render-blocking-resources'];
-  const rbEl = document.getElementById('renderBlocking');
-  rbEl.innerHTML = '';
-
+  const rbEl = document.getElementById('renderBlocking'); rbEl.innerHTML = '';
   if(rb?.details?.items?.length){
     rb.details.items.slice(0,10).forEach(it=>{
       const node = document.createElement('div'); 
@@ -460,80 +458,45 @@ function renderAll(res){
     });
   } else if(rb?.displayValue){
     rbEl.innerHTML = `<div class="kv">${rb.displayValue}</div>`;
-  } else {
-    rbEl.innerHTML = '<div class="kv">—</div>';
-  }
+  } else { rbEl.innerHTML = '<div class="kv">—</div>'; }
 
-  // ---------------- Unused CSS ----------------
-  const ucss = audits['unused-css-rules'];
-  const ucssEl = document.getElementById('unusedCss');
-  ucssEl.innerHTML = '';
-
+  // Unused CSS
+  const ucss = audits['unused-css-rules']; const ucssEl = document.getElementById('unusedCss'); ucssEl.innerHTML='';
   if(ucss?.details?.items?.length){
     ucss.details.items.forEach(it=>{
       const node = document.createElement('div'); 
       node.className = 'audit';
-      node.innerHTML = `
-        <div class="left">
-          <div class="title">${it.url}</div>
-          <div class="kv">Total: ${bytesToKB(it.totalBytes)} — wasted: ${bytesToKB(it.wastedBytes)}</div>
-        </div>`;
+      node.innerHTML = `<div class="left"><div class="title">${it.url}</div><div class="kv">Total: ${bytesToKB(it.totalBytes)} — wasted: ${bytesToKB(it.wastedBytes)}</div></div>`;
       ucssEl.appendChild(node);
     });
   } else if(ucss?.displayValue){
     ucssEl.innerHTML = `<div class="kv">${ucss.displayValue}</div>`;
   } else if(ucss?.overallSavingsBytes){
     ucssEl.innerHTML = `<div class="kv">Savings: ${bytesToKB(ucss.overallSavingsBytes)}</div>`;
-  } else {
-    ucssEl.innerHTML = '<div class="kv">—</div>';
-  }
+  } else { ucssEl.innerHTML = '<div class="kv">—</div>'; }
 
-
-
-
-
-  // ---------------- PASSED AUDITS ----------------
+  // Passed Audits
   const passed=document.getElementById('passed'); passed.innerHTML='';
   Object.values(audits).forEach(a=>{
     if(a.score===1 || a.scoreDisplayMode==='notApplicable'){
       const sev=auditSeverity(a);
       const node=document.createElement('div'); node.className='audit';
-      node.innerHTML=`
-        <div class="left">
-          <div class="title">${a.title||a.id}</div>
-          <div class="kv">${a.displayValue||a.description||''}</div>
-        </div>
-        <div style="color:${sev.color}">✔</div>`;
+      node.innerHTML=`<div class="left"><div class="title">${a.title||a.id}</div><div class="kv">${a.displayValue||a.description||''}</div></div><div style="color:${sev.color}">✔</div>`;
       passed.appendChild(node);
     }
   });
   if(!passed.children.length) passed.innerHTML='<div class="kv">No passed audits</div>';
 
-
-  // -----------------------------------------------------
-  // ----------------------- Categories -------------------
-  // -----------------------------------------------------
+  // Categories
   (function setupCategories(){
-    const tabs=document.getElementById('categoryTabs');
-    tabs.innerHTML='';
-
-    const catKeys=Object.keys(cats).length 
-      ? Object.keys(cats) 
-      : ['performance','accessibility','best-practices','seo','pwa'];
-
+    const tabs=document.getElementById('categoryTabs'); tabs.innerHTML='';
+    const catKeys=Object.keys(cats).length ? Object.keys(cats) : ['performance','accessibility','best-practices','seo','pwa'];
     const preferred=['performance','accessibility','best-practices','seo','pwa'];
     const ordered = preferred.filter(k=>catKeys.includes(k)).concat(catKeys.filter(k=>!preferred.includes(k)));
 
     ordered.forEach((k,i)=>{
-      const b=document.createElement('button');
-      b.className='tab'+(i===0?' active':'');
-      b.dataset.cat=k;
-      b.innerText=cats[k]?.title || k.toUpperCase();
-      b.onclick=()=>{
-        document.querySelectorAll('#categoryTabs .tab').forEach(t=>t.classList.remove('active'));
-        b.classList.add('active');
-        showCat(k);
-      };
+      const b=document.createElement('button'); b.className='tab'+(i===0?' active':''); b.dataset.cat=k; b.innerText=cats[k]?.title || k.toUpperCase();
+      b.onclick=()=>{ document.querySelectorAll('#categoryTabs .tab').forEach(t=>t.classList.remove('active')); b.classList.add('active'); showCat(k); };
       tabs.appendChild(b);
     });
 
@@ -541,10 +504,8 @@ function renderAll(res){
       const cat=cats[k] || {title:k, description:''};
       document.getElementById('catTitle').innerText=cat.title;
       document.getElementById('catDesc').innerText=cat.description;
-
-      const score=Math.round((cat.score??0)*100);
-      document.getElementById('catScoreWrap').innerHTML = 
-        makeGauge(score,80)+`<div style="margin-top:8px">${score}</div>`;
+      const score=Math.round((cat.score!=null?cat.score:0)*100);
+      document.getElementById('catScoreWrap').innerHTML = makeGauge(score,80)+`<div style="margin-top:8px">${score}</div>`;
 
       const ids=(cat.auditRefs||[]).map(r=>r.id).filter(Boolean);
       let list=ids.map(id=>audits[id]).filter(Boolean);
@@ -561,10 +522,8 @@ function renderAll(res){
 
       opp.sort((A,B)=>((B.details?.overallSavingsMs||0)+(B.details?.overallSavingsBytes||0))-((A.details?.overallSavingsMs||0)+(A.details?.overallSavingsBytes||0)));
       diag.sort((A,B)=>(A.id||'').localeCompare(B.id||''));
-
       renderAudits(opp,document.getElementById('opportunities'));
       renderAudits(diag,document.getElementById('diagnostics'));
-
       if(!opp.length) document.getElementById('opportunities').innerHTML='<div class="kv">No opportunities</div>';
       if(!diag.length) document.getElementById('diagnostics').innerHTML='<div class="kv">No diagnostics</div>';
     }
@@ -572,27 +531,24 @@ function renderAll(res){
     showCat(ordered[0]||'performance');
   })();
 
-  // -----------------------------------------------------
-  // ----------------------- raw -------------------
-  // -----------------------------------------------------
+  // Raw JSON
   const raw=document.getElementById('raw'); raw.value=JSON.stringify(res,null,2);
   document.getElementById('copyJsonBtn').onclick=()=>navigator.clipboard.writeText(JSON.stringify(res,null,2)).then(()=>alert('JSON کپی شد'));
   document.getElementById('downloadJsonBtn').onclick=()=>{
-    const blob=new Blob([JSON.stringify(res,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url; a.download='pagespeed-result.json'; a.click(); URL.revokeObjectURL(url);
+    const blob=new Blob([JSON.stringify(res,null,2)],{type:'application/json'}); 
+    const url=URL.createObjectURL(blob); 
+    const a=document.createElement('a'); a.href=url; a.download='pagespeed-result.json'; a.click(); 
+    URL.revokeObjectURL(url);
   };
-
 }
 
-
-// -----------------------------------------------------
-// ----------------------- RUN --------------------------
-// -----------------------------------------------------
-{% if raw_json %}
-const pagespeedData = {{ raw_json|safe }};
+// --------------------- RUN ---------------------
+{% if result_data %}
+const pagespeedData = {{ result_data|safe }};
 renderAll(pagespeedData);
 {% endif %}
 </script>
+
 
 </body>
 </html>
