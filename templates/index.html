@@ -105,17 +105,71 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
   cursor:not-allowed;
 }
 
-/* LOADER */
+/* MODAL OVERLAY */
+.loading-modal{
+  position:fixed;
+  inset:0;
+  backdrop-filter: blur(6px);
+  background:rgba(0,0,0,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+
+/* ACTIVE STATE */
+.loading-modal.show{
+  opacity:1;
+  pointer-events:all;
+}
+
+/* BOX */
+.loading-box{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:28px 38px;
+  border-radius:20px;
+  text-align:center;
+  backdrop-filter:blur(12px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  animation:fadeUp .35s ease;
+  max-width:260px;
+}
+
+/* TEXT */
+.loader-text{
+  margin-top:14px;
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+  opacity:0.9;
+  animation:fadeTxt 1.6s infinite ease-in-out;
+}
+
+/* LOADER BIGGER */
 .loader{
-  width:32px;
-  height:32px;
-  border:4px solid var(--accent);
+  width:42px;
+  height:42px;
+  border:5px solid var(--accent);
   border-right-color:transparent;
   border-radius:50%;
-  animation:spin .8s linear infinite;
+  animation:spin .7s linear infinite;
   margin:auto;
-  display:none;
-  margin-top:25px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(10px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+@keyframes fadeTxt{
+  0%{opacity:0.3}
+  50%{opacity:1}
+  100%{opacity:0.3}
 }
 @keyframes spin{
   to{transform:rotate(360deg)}
@@ -135,7 +189,14 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
   border-radius:14px;
   border:1px solid rgba(255,255,255,0.04);
   text-align:center;
+
+  /* اضافه شده برای ارتفاع یکسان */
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:134px;
 }
+
 
 .feat-title{
   font-weight:700;
@@ -158,6 +219,68 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
     padding:14px 0;
   }
 }
+
+/* ERROR MODAL */
+.error-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(6px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+  z-index:999;
+}
+
+.error-modal.show{
+  opacity:1;
+  pointer-events:all;
+}
+
+.error-box{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:24px 30px;
+  border-radius:18px;
+  backdrop-filter:blur(12px);
+  max-width:320px;
+  text-align:center;
+  animation:fadeUp .35s ease;
+}
+
+.error-title{
+  font-weight:800;
+  font-size:18px;
+  margin-bottom:10px;
+  color:#ff6b6b;
+}
+
+.error-message{
+  font-size:14px;
+  line-height:1.8;
+  margin-bottom:18px;
+  color:#f1f1f1;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 260px;
+  text-align: center;
+}
+
+.error-button{
+  background:#ff6b6b;
+  color:white;
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:700;
+  font-family: inherit;
+}
+
 </style>
 </head>
 
@@ -165,10 +288,10 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
 
 <div class="app">
   <div class="wrap">
-    <div class="title">PageSpeed ایران</div>
+    <div class="title">SpeedScan ایران</div>
 
     <div class="desc">
-      سریع‌ترین و پیشرفته‌ترین پنل تحلیل PageSpeed در ایران — با رندر کامل Lighthouse، گزارش‌گیری حرفه‌ای،
+      سریع‌ترین و پیشرفته‌ترین پنل تحلیل SpeedScan در ایران — با رندر کامل Lighthouse، گزارش‌گیری حرفه‌ای،
       نمودارهای دقیق، و نمایش تمام جزئیات Performance، SEO، Accessibility و Best Practices.
     </div>
 
@@ -178,33 +301,61 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--m3-bg) 0%
       <button id="btnTest" class="button">شروع تست</button>
     </form>
 
-    <!-- LOADER -->
-    <div id="loader" class="loader"></div>
-
     <!-- FEATURES -->
     <div class="features">
       <div class="feat">
-        <div class="feat-title">Lighthouse کامل</div>
-        <div class="feat-desc">تحلیل کامل JSON با تمام شاخص‌ها</div>
+        <div class="feat-title">تحلیل کامل سرعت و عملکرد</div>
+        <div class="feat-desc">بررسی کامل زمان بارگذاری صفحات و بهینه‌سازی عملکرد سایت</div>
       </div>
 
       <div class="feat">
         <div class="feat-title">Core Web Vitals</div>
-        <div class="feat-desc">نمایش LCP، CLS، FCP و تمام معیارها</div>
+        <div class="feat-desc">نمایش شاخص‌های کلیدی تجربه کاربری مانند LCP، CLS و FCP</div>
       </div>
 
       <div class="feat">
-        <div class="feat-title">رندر Material 3</div>
-        <div class="feat-desc">داشبورد حرفه‌ای و مدرن</div>
+        <div class="feat-title">بهینه‌سازی تصاویر و منابع</div>
+        <div class="feat-desc">شناسایی منابع سنگین و تصاویر غیر بهینه برای کاهش زمان بارگذاری</div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-title">رندر مدرن و داشبورد حرفه‌ای</div>
+        <div class="feat-desc">نمایش بصری نتایج با طراحی Material 3 و گرافیک شفاف</div>
       </div>
 
       <div class="feat">
         <div class="feat-title">JSON Viewer</div>
-        <div class="feat-desc">نمایش کامل خروجی Lighthouse</div>
+        <div class="feat-desc">نمایش کامل جزئیات تحلیل‌ها و خروجی فنی برای توسعه‌دهندگان</div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-title">تاریخچه تست‌ها</div>
+        <div class="feat-desc">دسترسی به سابقه تحلیل‌های انجام شده و مقایسه نتایج قبلی</div>
       </div>
     </div>
 
   </div>
+  <div style="margin-top:20px; text-align:center; color:var(--muted); font-size:13px; display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap;">
+  <span>© کلیه حقوق این سایت متعلق به <a href="https://mehrshadina.ir" target="_blank" style="color:var(--accent); text-decoration:none;">مهرشادینا</a> می‌باشد.</span>  <span>میزبانی سایت توسط</span>
+  <a href="https://www.parspack.com" target="_blank" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none; color:#2175b4;">
+    <img src="https://www.parspack.com/assets/images/logo.svg" alt="Parspack" style="height:16px; display:inline-block;">
+    <span>پارس‌پک</span>
+  </a>
+</div>
+
+
+<div id="loadingModal" class="loading-modal">
+  <div class="loading-box">
+    <div class="loader"></div>
+    <div class="loader-text">در حال تحلیل و پردازش…</div>
+  </div>
+</div>
+
+<div id="errorModal" class="error-modal">
+  <div class="error-box">
+    <div class="error-title">خطا در انجام تست</div>
+    <div id="errorMsg" class="error-message">متن خطا...</div>
+  <button onclick="retryTest()" class="error-button">تست مجدد</button>
 </div>
 
 <script>
@@ -213,21 +364,45 @@ function startTest(e){
 
   const url = document.getElementById('urlInput').value;
   const btn = document.getElementById('btnTest');
-  const loader = document.getElementById('loader');
 
   btn.disabled = true;
-  loader.style.display = "block";
 
-  setTimeout(()=>{
-    window.location.href = "/pagespeed-check?url=" + encodeURIComponent(url);
-  }, 800);
+  document.getElementById('loadingModal').classList.add('show');
+
+  fetch(`/pagespeed-check-api/?url=${encodeURIComponent(url)}`)
+    .then(res => res.json().then(data => ({status: res.status, body: data})))
+    .then(res => {
+
+        if (res.status !== 200) {
+            showError(res.body.error || "خطای نامشخص");
+            return;
+        }
+
+        window.location.href = `/pagespeed-result/${res.body.access_link}/`;
+    })
+    .catch(err => {
+      showError("خطای ارتباط با سرور");
+    });
 }
 
-/* FIX BACK BUTTON CACHE */
+function showError(msg){
+  document.getElementById('loadingModal').classList.remove('show');
+
+  document.getElementById('errorMsg').textContent = msg;
+  document.getElementById('errorModal').classList.add('show');
+
+  document.getElementById('btnTest').disabled = false;
+}
+
+function retryTest(){
+  document.getElementById('errorModal').classList.remove('show');
+  document.getElementById('btnTest').disabled = false;
+}
+
 window.addEventListener("pageshow", function(event) {
   if (event.persisted) {
     document.getElementById('btnTest').disabled = false;
-    document.getElementById('loader').style.display = "none";
+    document.getElementById('loadingModal').classList.remove('show');
   }
 });
 </script>
