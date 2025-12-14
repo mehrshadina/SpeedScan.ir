@@ -176,5 +176,5 @@ if __name__ == "__main__":
         }
     }
 
-    translated_json = translate_pagespeed_values(sample_json)
+    translated_json = translate_pagespeed(sample_json)
     print(json.dumps(translated_json, ensure_ascii=False, indent=2))
