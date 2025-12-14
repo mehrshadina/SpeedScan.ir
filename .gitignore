@@ -8,7 +8,9 @@ __pycache__/
 # Env
 .env
 
+
 # Django stuff
+database/
 db.sqlite3
 static/
 media/
