@@ -58,6 +58,70 @@ def pagespeed_check_api(request):
     if not url.startswith("http://") and not url.startswith("https://"):
         url = "http://" + url
 
+    try:
+        response = requests.get(url, timeout=10, allow_redirects=True)
+        response.raise_for_status()
+        url = response.url
+
+        for site in {'google.com', 'www.google.com', 'facebook.com', 'www.facebook.com'}:
+            if site in url:
+                return JsonResponse(
+                    {"error": "تحلیل سایت‌های گوگل و فیسبوک مجاز نیست."},
+                    status=403
+                )
+
+    except requests.exceptions.MissingSchema:
+        return JsonResponse(
+            {"error": "آدرس سایت ناقص است. http یا https وارد نشده است."},
+            status=400
+        )
+
+    except requests.exceptions.InvalidURL:
+        return JsonResponse(
+            {"error": "فرمت آدرس سایت نادرست است."},
+            status=400
+        )
+
+    except requests.exceptions.Timeout:
+        return JsonResponse(
+            {"error": "سایت در زمان مشخص پاسخ نداد (Timeout)."},
+            status=504
+        )
+
+    except requests.exceptions.SSLError:
+        return JsonResponse(
+            {"error": "گواهی SSL سایت معتبر نیست."},
+            status=526
+        )
+
+    except requests.exceptions.TooManyRedirects:
+        return JsonResponse(
+            {"error": "سایت دچار ریدایرکت نامحدود است."},
+            status=508
+        )
+
+    except requests.exceptions.ConnectionError:
+        return JsonResponse(
+            {"error": "اتصال به سایت ممکن نیست. دامنه اشتباه یا سرور در دسترس نیست."},
+            status=503
+        )
+
+    except requests.exceptions.HTTPError as e:
+        return JsonResponse(
+            {
+                "error": "سایت پاسخ خطا داد.",
+                "status_code": e.response.status_code
+            },
+            status=502
+        )
+
+    except Exception:
+        return JsonResponse(
+            {"error": "خطای غیرمنتظره‌ای هنگام بررسی سایت رخ داد."},
+            status=500
+        )
+
+
     api_key = getattr(settings, "PAGESPEED_API_KEY", None)
 
     # Base parameters for remote analysis

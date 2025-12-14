@@ -22,6 +22,11 @@ PAGESPEED_API_KEY = os.environ["PAGESPEED_API_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://speedscan.ir",
+    "https://www.speedscan.ir",
+]
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -31,3 +36,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'database/db.sqlite3',
     }
 }
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
