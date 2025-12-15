@@ -136,7 +136,7 @@ def pagespeed_check_api(request):
 
     try:
         # Perform remote analysis request
-        resp = requests.get(settings.GOOGLE_PAGESPEED_API_URL, params=params, timeout=120)
+        resp = requests.get(settings.GOOGLE_PAGESPEED_API_URL, params=params)#, timeout=120)
         resp.raise_for_status()
         data = resp.json()
 
