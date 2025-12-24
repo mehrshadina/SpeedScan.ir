@@ -6,6 +6,10 @@ The website is publicly accessible, but the **source code and implementation are
 
 🌐 Live Website: https://speedscan.ir
 
+## 📸 Website Preview
+
+![SpeedScan.ir Preview](static/home-screenshot-for-github.png)
+
 ---
 
 ## 🔐 Ownership & Usage Policy
@@ -73,6 +77,6 @@ Unauthorized copying, modification, distribution, or use of this code is strictl
 
 ## 👤 Author
 
-**[Your Name]**  
+**Mehrshadina**  
 Website: https://mehrshadina.ir 
 GitHub: https://github.com/mehrshadina
